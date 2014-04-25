@@ -71,13 +71,27 @@ let fb_component =
                                              ~doc: "cursors"
                                              ((abbrv "cursors" @@ field root "cursors"))]));
       def_type
-        ~doc:"api res."
-        "api_res" (public (record [row "data"
+        ~doc:"event res."
+        "event_res" (public (record [row "data"
                                       ~doc: "data"
                                       ((array (abbrv "api_element")) @@ field root "data");
                                    row "paging"
                                      ~doc: "paging"
                                      ((abbrv "paging_element") @@ field root "paging")]));
+      def_type
+        ~doc:"profile res."
+        "profile_res" (public (record [row "id"
+                                          ~doc: "id"
+                                          (string @@ field root "id");
+                                       row "link"
+                                         ~doc: "link"
+                                         (string @@ field root "link");
+                                       row "gender"
+                                         ~doc: "gender"
+                                         (string @@ field root "gender");
+                                       row "username"
+                                         ~doc: "username"
+                                         (string @@ field root "username")]));
       map_function "init"
         ~doc:"Init fb stuff"
         [ curry_arg "init_param" ((abbrv "init_arg") @@ arg 0)]
@@ -88,10 +102,16 @@ let fb_component =
         [ curry_arg "f" ((callback [ curry_arg "response" ((abbrv "login_res") @@ arg 0)] void) @@ arg 0)]
         "FB.login"
         void;
-      map_function "api"
-        ~doc:"api"
+      map_function "api_event"
+        ~doc:"consult a facebook event"
         [ curry_arg "link" (string @@ arg 0);
-          curry_arg "f" ((callback [ curry_arg "response" ((abbrv "api_res") @@ arg 0)] void) @@ arg 1)]
+          curry_arg "f" ((callback [ curry_arg "response" ((abbrv "event_res") @@ arg 0)] void) @@ arg 1)]
+        "FB.api"
+        void;
+      map_function "api_profile"
+        ~doc:"consult a facebook profile"
+        [ curry_arg "link" (string @@ arg 0);
+          curry_arg "f" ((callback [ curry_arg "response" ((abbrv "profile_res") @@ arg 0)] void) @@ arg 1)]
         "FB.api"
         void
     ]

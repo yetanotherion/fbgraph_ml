@@ -1,7 +1,5 @@
 module Html = Dom_html
 
-let console s =
-  ignore(Js.Unsafe.fun_call (Js.Unsafe.variable "console.log") [| Js.Unsafe.inject (Js.string s) |])
 
 let alert s =
   Html.window##alert (Js.string s)
@@ -18,15 +16,15 @@ let f () =
     match res with
       | Fb.Ok obj -> begin
 	let auth_response = obj.Fb.auth_response in
-	console (auth_response.Fb.userId);
-	console (auth_response.Fb.accessToken);
+	Js.Unsafe.global##console##log(auth_response.Fb.userId);
+	Js.Unsafe.global##console##log(auth_response.Fb.accessToken);
 	Fb.api_profile "/me" process_answer
       end
       | Fb.Nok -> begin
-	console "login failed"
+	Js.Unsafe.global##console##log("login failed")
       end
       | Fb.Void -> begin
-	console "unexpected"
+	Js.Unsafe.global##console##log("unexpected")
       end
   in
   Fb.login after_login

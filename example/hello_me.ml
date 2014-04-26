@@ -16,15 +16,15 @@ let f () =
     match res with
       | Fb.Ok obj -> begin
 	let auth_response = obj.Fb.auth_response in
-	Js.Unsafe.global##console##log(auth_response.Fb.userId);
-	Js.Unsafe.global##console##log(auth_response.Fb.accessToken);
+	Firebug.console##log(Js.string ("userId: " ^ auth_response.Fb.userId));
+	Firebug.console##log(Js.string ("acessToken: " ^ auth_response.Fb.accessToken));
 	Fb.api_profile "/me" process_answer
       end
       | Fb.Nok -> begin
-	Js.Unsafe.global##console##log("login failed")
+	Firebug.console##log(Js.string "login failed")
       end
       | Fb.Void -> begin
-	Js.Unsafe.global##console##log("unexpected")
+	Firebug.console##log(Js.string "unexpected")
       end
   in
   Fb.login after_login

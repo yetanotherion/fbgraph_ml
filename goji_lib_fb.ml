@@ -148,7 +148,7 @@ let fb_component =
         "event_res" (public (variant ([constr "Nok"
                                           Guard.(field root "error" <> undefined)
                                           ~doc:"event does not exist"
-                                        [ (abbrv "error")];
+                                        [ (abbrv "error") @@ field root "error"];
                                        constr "Ok"
                                          Guard.tt
                                          ~doc: "event successfully obtained"

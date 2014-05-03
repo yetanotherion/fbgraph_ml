@@ -11,7 +11,14 @@ let f () =
 	    Fb.xfbml = false;
             Fb.version = "v2.0" };
   let process_answer answer =
-    alert (Printf.sprintf "Hello %s" answer.Fb.username)
+    alert (Printf.sprintf "Hello %s" answer.Fb.username);
+    let generate_error fb_res =
+      match fb_res with
+        | Fb.Nok error -> alert(Printf.sprintf "Got error message:%s error_type %s code %d" error.Fb.message error.Fb.error_type error.Fb.code)
+        | Fb.Ok api_res -> alert(Printf.sprintf "no error");
+      alert ("you fixed the bug !");
+    in
+    Fb.api_event "/v2.0/0" generate_error
   in
   let after_login res =
     match res with

@@ -2,6 +2,8 @@
    Binding (c) 2014 Ion Alberdi *)
 
 open Goji
+open Goji_syntax
+open Goji_ast
 
 let fb_package =
   register_package
@@ -19,11 +21,27 @@ let fb_component =
         "init_arg" (public (record [ row "appId"
                                        ~doc:"appId"
                                        (string @@ field root "appId");
-                                     row "status"
+                                     row "cookie"
                                        (bool @@ field root "status");
                                      row "xfbml"
-                                       (bool @@ field root "xfbml")
+                                       (bool @@ field root "xfbml");
+                                     row "version"
+                                       (string @@ field root "version")
                                    ]));
+      def_type
+        ~doc: "status response"
+        "status_res" (public (variant ( [constr "LoggedInFbAndApp"
+                                            Guard.(field root "status" = string "connected")
+                                         ~doc:"logged in fb and app"
+                                            [];
+                                         constr "LoggedInFbOnly"
+                                           Guard.(field root "status" = string "not_authorized")
+                                           ~doc: "need to log to the app"
+                                           [];
+                                         constr "NotLoggedInFb"
+                                           Guard.tt
+                                           ~doc: "not logged in Fb"
+                                           []])));
       def_type
         ~doc:"auth response."
         "auth_response" (public (record [ row "userId"
@@ -71,13 +89,72 @@ let fb_component =
                                              ~doc: "cursors"
                                              ((abbrv "cursors" @@ field root "cursors"))]));
       def_type
-        ~doc:"event res."
-        "event_res" (public (record [row "data"
-                                      ~doc: "data"
-                                      ((array (abbrv "api_element")) @@ field root "data");
-                                   row "paging"
-                                     ~doc: "paging"
-                                     ((abbrv "paging_element") @@ field root "paging")]));
+        ~doc: "owner."
+        "owner" (public (record [row "name"
+                                        ~doc: "name"
+                                        (string @@ field root "name");
+                                     row "id"
+                                       ~doc: "name"
+                                       (string @@ field root "id")]));
+      def_type
+        ~doc: "venue."
+        "venue" (public (record [row "id"
+                                    ~doc: "id"
+                                    (string @@ field root "id");
+                                 row "city"
+                                   ~doc: "city"
+                                   (string @@ field root "city");
+                                 row "country"
+                                   ~doc: "country"
+                                   (string @@ field root "country");
+                                ]));
+      def_type
+        ~doc:"correct event res."
+        "correct_event_res" (public (record [row "description"
+                                                ~doc: "description"
+                                                (string  @@ field root "description");
+                                             row "is_date_only"
+                                               ~doc: "is_date_only"
+                                               (string @@ field root "is_date_only");
+                                             row "name"
+                                               ~doc: "name"
+                                               (string @@ field root "name");
+                                             row "owner"
+                                               ~doc: "owner"
+                                               ((abbrv "owner") @@ field root "owner");
+                                             row "start_time"
+                                               ~doc: "start_time"
+                                               (string @@ field root "start_time");
+                                             row "venue"
+                                               ~doc: "venue"
+                                               ((abbrv "venue") @@ field root "venue");
+                                             row "privacy"
+                                               ~doc: "privacy"
+                                               (string @@ field root "privacy")]));
+
+      def_type
+        ~doc: "error"
+        "error" (public (record [row "message"
+                                    ~doc: "message"
+                                    (string @@ field root "message");
+                                 row "error_type"
+                                   ~doc: "type"
+                                   (string @@ field root "type");
+                                 row "code"
+                                   ~doc: "code"
+                                   (int @@ field root "code")]));
+      def_type
+        ~doc: "event res"
+        "event_res" (public (variant ([constr "Nok"
+                                          Guard.(field root "error" <> undefined)
+                                          ~doc:"event does not exist"
+                                        [ (abbrv "error")];
+                                       constr "Ok"
+                                         Guard.tt
+                                         ~doc: "event successfully obtained"
+                                         [(abbrv "correct_event_res")]])));
+
+
       def_type
         ~doc:"profile res."
         "profile_res" (public (record [row "id"
@@ -102,12 +179,18 @@ let fb_component =
         [ curry_arg "f" ((callback [ curry_arg "response" ((abbrv "login_res") @@ arg 0)] void) @@ arg 0)]
         "FB.login"
         void;
+      map_function "getLoginStatus"
+        ~doc:"get login status"
+        [ curry_arg "f" ((callback [ curry_arg "response" ((abbrv "status_res") @@ arg 0)] void) @@ arg 0)]
+        "FB.getLoginStatus"
+        void;
       map_function "api_event"
         ~doc:"consult a facebook event"
         [ curry_arg "link" (string @@ arg 0);
-          curry_arg "f" ((callback [ curry_arg "response" ((abbrv "event_res") @@ arg 0)] void) @@ arg 1)]
+          curry_arg "f" ((callback [ curry_arg "response" ((abbrv "correct_event_res") @@ arg 0)] void) @@ arg 1)]
         "FB.api"
         void;
+
       map_function "api_profile"
         ~doc:"consult a facebook profile"
         [ curry_arg "link" (string @@ arg 0);

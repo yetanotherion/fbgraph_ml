@@ -7,24 +7,22 @@ let alert s =
 
 let f () =
   Fb.init { Fb.appId = "<set your app id here>";
-	    Fb.status = true;
-	    Fb.xfbml = false };
+	    Fb.cookie = true;
+	    Fb.xfbml = false;
+            Fb.version = "v2.0" };
   let process_answer answer =
     alert (Printf.sprintf "Hello %s" answer.Fb.username)
   in
   let after_login res =
     match res with
-      | Fb.Ok obj -> begin
+      | Fb.Login_succ obj -> begin
 	let auth_response = obj.Fb.auth_response in
 	Firebug.console##log(Js.string ("userId: " ^ auth_response.Fb.userId));
 	Firebug.console##log(Js.string ("acessToken: " ^ auth_response.Fb.accessToken));
 	Fb.api_profile "/me" process_answer
       end
-      | Fb.Nok -> begin
+      | Fb.Login_failed | Fb.Login_unhandled_error -> begin
 	Firebug.console##log(Js.string "login failed")
-      end
-      | Fb.Void -> begin
-	Firebug.console##log(Js.string "unexpected")
       end
   in
   Fb.login after_login

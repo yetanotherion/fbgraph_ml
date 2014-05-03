@@ -55,15 +55,15 @@ let fb_component =
                                                      row "auth_response" ((abbrv "auth_response") @@ field root "authResponse")]));
       def_type
         ~doc:"login res."
-        "login_res" (public (variant ( [constr "Nok"
+        "login_res" (public (variant ( [constr "Login_failed"
                                            Guard.(field root "status" = string "not_authorized")
                                            ~doc:"login error"
                                            [];
-                                        constr "Ok"
+                                        constr "Login_succ"
                                           Guard.(field root "status" = string "connected")
                                           ~doc: "succesfull login"
                                           [(abbrv "status_and_auth_response")];
-                                        constr "Void"
+                                        constr "Login_unhandled_error"
                                           Guard.tt
                                           ~doc: "unhandled"
                                           []])));
@@ -187,7 +187,7 @@ let fb_component =
       map_function "api_event"
         ~doc:"consult a facebook event"
         [ curry_arg "link" (string @@ arg 0);
-          curry_arg "f" ((callback [ curry_arg "response" ((abbrv "correct_event_res") @@ arg 0)] void) @@ arg 1)]
+          curry_arg "f" ((callback [ curry_arg "response" ((abbrv "event_res") @@ arg 0)] void) @@ arg 1)]
         "FB.api"
         void;
 

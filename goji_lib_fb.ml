@@ -185,16 +185,19 @@ let fb_component =
         [ curry_arg "init_param" ((abbrv "init_arg") @@ arg 0)]
         "FB.init"
         void;
+
       map_function "login"
         ~doc:"login"
         [ curry_arg "f" ((callback [ curry_arg "response" ((abbrv "login_res") @@ arg 0)] void) @@ arg 0)]
         "FB.login"
         void;
+
       map_function "getLoginStatus"
         ~doc:"get login status"
         [ curry_arg "f" ((callback [ curry_arg "response" ((abbrv "status_res") @@ arg 0)] void) @@ arg 0)]
         "FB.getLoginStatus"
         void;
+
       map_function "api_event"
         ~doc:"consult a facebook event"
         [ curry_arg "link" (string @@ arg 0);

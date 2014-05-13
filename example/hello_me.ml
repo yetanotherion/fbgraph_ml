@@ -15,6 +15,7 @@ let f () =
     let generate_error fb_res =
       match fb_res with
         | Fb.Nok error -> alert(Printf.sprintf "Got error message:%s error_type %s code %d" error.Fb.message error.Fb.error_type error.Fb.code)
+        | Fb.Data _ -> alert("unexpected data");
         | Fb.Ok api_res -> alert(Printf.sprintf "no error");
       alert ("you fixed the bug !");
     in

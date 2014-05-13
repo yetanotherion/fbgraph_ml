@@ -77,7 +77,7 @@ let fb_component =
                                     (string @@ field root "before")]));
       def_type
         ~doc: "api element."
-        "api_element" (public (record [row "id"
+        "api_element" (public (record [row "user_id"
                                           ~doc: "id"
                                           (string @@ field root "id");
                                        row "name"
@@ -87,18 +87,24 @@ let fb_component =
         ~doc: "paging."
         "paging_element" (public (record [row "cursors"
                                              ~doc: "cursors"
-                                             ((abbrv "cursors" @@ field root "cursors"))]));
+                                             ((abbrv "cursors" @@ field root "cursors"));
+                                          row "previous"
+                                            ~doc: "link to previous"
+                                            ((option_undefined string) @@ field root "previous");
+                                          row "next"
+                                            ~doc: "link to next"
+                                            ((option_undefined string) @@ field root "next")]));
       def_type
         ~doc: "owner."
         "owner" (public (record [row "name"
                                         ~doc: "name"
                                         (string @@ field root "name");
-                                     row "id"
+                                     row "owner_id"
                                        ~doc: "name"
                                        (string @@ field root "id")]));
       def_type
         ~doc: "venue."
-        "venue" (public (record [row "id"
+        "venue" (public (record [row "venue_id"
                                     ~doc: "id"
                                     (string @@ field root "id");
                                  row "city"
@@ -149,6 +155,11 @@ let fb_component =
                                           Guard.(field root "error" <> undefined)
                                           ~doc:"event does not exist"
                                         [ (abbrv "error") @@ field root "error"];
+                                       constr "Data"
+                                           Guard.(field root "data" <> undefined)
+                                           ~doc: "data from the event"
+                                         [ (array (abbrv "api_element")) @@ field root "data";
+                                           (abbrv "paging_element") @@ field root "paging" ];
                                        constr "Ok"
                                          Guard.tt
                                          ~doc: "event successfully obtained"
@@ -157,7 +168,7 @@ let fb_component =
 
       def_type
         ~doc:"profile res."
-        "profile_res" (public (record [row "id"
+        "profile_res" (public (record [row "profile_id"
                                           ~doc: "id"
                                           (string @@ field root "id");
                                        row "link"

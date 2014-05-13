@@ -11,6 +11,7 @@ libs.js:
 hello_me.byte: hello_me.ml
 	ocamlfind ocamlc -g \
 	-syntax camlp4o -package js_of_ocaml.syntax \
+	-syntax camlp4o -package lwt.syntax \
 	-package fb,js_of_ocaml \
           $< -linkpkg -o $@
 

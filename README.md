@@ -23,7 +23,7 @@ Try example/hello_me.ml
    https://developers.facebook.com/, <br/>
    tab Applications> Create an application.
 
-3. Set it in example/hello_me.ml#11.
+3. Set it in example/hello_me.ml#47.
 
 4. Generate hello_me.js <br/>
    % cd example <br/>

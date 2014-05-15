@@ -58,7 +58,7 @@ let _ =
       Firebug.console##log(Js.string ("userId: " ^ auth_response.Fb.userId));
       Firebug.console##log(Js.string ("acessToken: " ^ auth_response.Fb.accessToken));
       lwt profile_res = lwt_api_profile "/me" in
-      alert (Printf.sprintf "Hello %s" profile_res.Fb.username);
+      aalert (Printf.sprintf "Hello %s" profile_res.Fb.username);
       match_lwt (lwt_api_event "/v2.0/0") with
         | Fb.Nok error -> (alert(Printf.sprintf
                                    "Got error message:%s error_type %s code %d"

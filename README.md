@@ -10,8 +10,8 @@ Build and install library
 https://github.com/klakplok/goji
 
 - Build and install <br/>
-  % make <br/>
-  % make install <br/>
+  ```% make
+     % make install```
 
 
 Try example/hello_me.ml
@@ -26,8 +26,8 @@ Try example/hello_me.ml
 3. Set it in example/hello_me.ml#47.
 
 4. Generate hello_me.js <br/>
-   % cd example <br/>
-   % make
+   ```% cd example
+      % make```
 
 5. Download the Facebook javascript library
    wget http://connect.facebook.net/en_us/all.js

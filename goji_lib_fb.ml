@@ -177,9 +177,9 @@ let fb_component =
                                        row "gender"
                                          ~doc: "gender"
                                          (string @@ field root "gender");
-                                       row "username"
-                                         ~doc: "username"
-                                         (string @@ field root "username")]));
+                                       row "profile_name"
+                                         ~doc: "name"
+                                         (string @@ field root "name")]));
       map_function "init"
         ~doc:"Init fb stuff"
         [ curry_arg "init_param" ((abbrv "init_arg") @@ arg 0)]

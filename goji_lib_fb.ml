@@ -148,24 +148,8 @@ let fb_component =
                                    (string @@ field root "type");
                                  row "code"
                                    ~doc: "code"
+
                                    (int @@ field root "code")]));
-      def_type
-        ~doc: "event res"
-        "event_res" (public (variant ([constr "Nok"
-                                          Guard.(field root "error" <> undefined)
-                                          ~doc:"event does not exist"
-                                        [ (abbrv "error") @@ field root "error"];
-                                       constr "Data"
-                                           Guard.(field root "data" <> undefined)
-                                           ~doc: "data from the event"
-                                         [ (array (abbrv "api_element")) @@ field root "data";
-                                           (abbrv "paging_element") @@ field root "paging" ];
-                                       constr "Ok"
-                                         Guard.tt
-                                         ~doc: "event successfully obtained"
-                                         [(abbrv "correct_event_res")]])));
-
-
       def_type
         ~doc:"profile res."
         "profile_res" (public (record [row "profile_id"
@@ -180,6 +164,27 @@ let fb_component =
                                        row "profile_name"
                                          ~doc: "name"
                                          (string @@ field root "name")]));
+      def_type
+        ~doc: "api_res"
+        "api_res" (public (variant ([constr "Nok"
+                                          Guard.(field root "error" <> undefined)
+                                          ~doc:"event does not exist"
+                                        [ (abbrv "error") @@ field root "error"];
+                                     constr "ProfileOk"
+                                          Guard.(field root "gender" <> undefined)
+                                          ~doc:"answer is a profile"
+                                        [ (abbrv "profile_res" @@ root)];
+                                     constr "EvData"
+                                          Guard.(field root "data" <> undefined)
+                                          ~doc: "data from the event"
+                                        [ (array (abbrv "api_element")) @@ field root "data";
+                                          (abbrv "paging_element") @@ field root "paging" ];
+                                     constr "EvOk"
+                                          Guard.tt
+                                          ~doc: "event successfully obtained"
+                                        [(abbrv "correct_event_res")]])));
+
+
       map_function "init"
         ~doc:"Init fb stuff"
         [ curry_arg "init_param" ((abbrv "init_arg") @@ arg 0)]
@@ -198,17 +203,10 @@ let fb_component =
         "FB.getLoginStatus"
         void;
 
-      map_function "api_event"
-        ~doc:"consult a facebook event"
+      map_function "api"
+        ~doc:"call facebook api"
         [ curry_arg "link" (string @@ arg 0);
-          curry_arg "f" ((callback [ curry_arg "response" ((abbrv "event_res") @@ arg 0)] void) @@ arg 1)]
+          curry_arg "f" ((callback [ curry_arg "response" ((abbrv "api_res") @@ arg 0)] void) @@ arg 1)]
         "FB.api"
         void;
-
-      map_function "api_profile"
-        ~doc:"consult a facebook profile"
-        [ curry_arg "link" (string @@ arg 0);
-          curry_arg "f" ((callback [ curry_arg "response" ((abbrv "profile_res") @@ arg 0)] void) @@ arg 1)]
-        "FB.api"
-        void
     ]

@@ -133,7 +133,7 @@ let fb_component =
                                                (string @@ field root "start_time");
                                              row "venue"
                                                ~doc: "venue"
-                                               ((abbrv "venue") @@ field root "venue");
+                                               (option_undefined (abbrv "venue") @@ field root "venue");
                                              row "privacy"
                                                ~doc: "privacy"
                                                (string @@ field root "privacy")]));

@@ -29,6 +29,11 @@ let fb_component =
                                        (string @@ field root "version")
                                    ]));
       def_type
+        ~doc:"scope."
+        "scope" (public (record [ row "scope"
+                                       ~doc:"scope"
+                                       (string @@ field root "scope")]));
+      def_type
         ~doc: "status response"
         "status_res" (public (variant ( [constr "LoggedInFbAndApp"
                                             Guard.(field root "status" = string "connected")
@@ -184,7 +189,6 @@ let fb_component =
                                           ~doc: "event successfully obtained"
                                         [(abbrv "correct_event_res")]])));
 
-
       map_function "init"
         ~doc:"Init fb stuff"
         [ curry_arg "init_param" ((abbrv "init_arg") @@ arg 0)]
@@ -193,7 +197,8 @@ let fb_component =
 
       map_function "login"
         ~doc:"login"
-        [ curry_arg "f" ((callback [ curry_arg "response" ((abbrv "login_res") @@ arg 0)] void) @@ arg 0)]
+        [ curry_arg "f" ((callback [ curry_arg "response" ((abbrv "login_res") @@ arg 0)] void) @@ arg 0);
+          curry_arg "scope" ((abbrv "scope" @@ arg 1))]
         "FB.login"
         void;
 

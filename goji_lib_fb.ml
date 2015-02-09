@@ -176,7 +176,7 @@ let fb_component =
                                           ~doc:"event does not exist"
                                         [ (abbrv "error") @@ field root "error"];
                                      constr "ProfileOk"
-                                          Guard.(field root "gender" <> undefined)
+                                          Guard.(field root "first_name" <> undefined)
                                           ~doc:"answer is a profile"
                                         [ (abbrv "profile_res" @@ root)];
                                      constr "EvData"
